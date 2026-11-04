@@ -9,9 +9,9 @@ const intro=document.getElementById('reader-intro');
 const download=document.getElementById('reader-download');
 const hint=document.getElementById('reader-footnote');
 const catalog={
- excel:{title:'Excel-отчёт',intro:'Все семь листов подготовленного файла с вычисленными значениями и формулами.',href:'files/01_calculations.xlsx?v=20261103-r1',name:'01_Расчёты_Дружинская.xlsx',button:'Скачать Excel',hint:'Для изменения данных и пересчёта формул скачайте XLSX. Интерактивные сценарии доступны в разделе «Сценарий».'},
- slides:{title:'Презентация',intro:'Семь слайдов презентации.',href:'files/02_presentation.pptx',name:'02_Презентация_Дружинская.pptx',button:'Скачать PowerPoint',hint:'Для редактирования слайдов и заметок докладчика скачайте PPTX.'},
- guide:{title:'Инструкция по использованию',intro:'Полный текст Word-инструкции к итоговому комплекту.',href:'files/08_guide.docx',name:'08_Инструкция_для_заказчика.docx',button:'Скачать Word',hint:'DOCX содержит эту же инструкцию и таблицы для использования вместе с файлами комплекта.'}
+ excel:{title:'Excel-отчёт',intro:'Все семь листов подготовленного файла с вычисленными значениями и формулами.',href:'files/01_calculations.xlsx?v=20261104-r3',name:'01_Расчёты_Дружинская.xlsx',button:'Скачать Excel',hint:'Для изменения данных и пересчёта формул скачайте XLSX. Интерактивные сценарии доступны в разделе «Сценарий».'},
+ slides:{title:'Презентация',intro:'Семь слайдов презентации.',href:'files/02_presentation.pptx?v=20261104-r3',name:'02_Презентация_Дружинская.pptx',button:'Скачать PowerPoint',hint:'Для редактирования слайдов и заметок докладчика скачайте PPTX.'},
+ guide:{title:'Инструкция по использованию',intro:'Полный текст Word-инструкции к итоговому комплекту.',href:'files/08_guide.docx?v=20261104-r3',name:'08_Инструкция_для_заказчика.docx',button:'Скачать Word',hint:'DOCX содержит эту же инструкцию и таблицы для использования вместе с файлами комплекта.'}
 };
 let mode='',lastFocus=null,slide=0,sheet=2,showFormulas=false;
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
