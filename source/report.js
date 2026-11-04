@@ -8,7 +8,7 @@ const n=(v,d=2)=>new Intl.NumberFormat('ru-RU',{maximumFractionDigits:d}).format
 const rub=v=>n(v,2)+' ₽';
 const infos=__TEAM_INFO__;
 const metrics={productivity:{label:'Задач на участника за 2 недели',unit:'задач/участника',dec:3,caption:'Выполненные задачи / численность команды за две недели.'},cost_per_task:{label:'Расчётная стоимость задачи',unit:'₽/задачу',dec:0,caption:'Стоимость учтённых работ по ставке часа / выполненные задачи.'},density100:{label:'Багов на 100 задач',unit:'багов/100 задач',dec:2,caption:'Количество багов на каждые 100 выполненных задач.'},bug_cost:{label:'Стоимость исправлений',unit:'₽',dec:0,caption:'Количество багов × трудозатраты на исправление одного бага × ставка часа.'},q:{label:'Выполненные задачи',unit:'задач за 2 недели',dec:0,caption:'Абсолютный выпуск команды за двухнедельный период.'}};
-const factorLabels=['Трудозатраты на задачу','Багов на задачу','Трудозатраты на исправление бага','Ставка часа'];
+const factorLabels=['Трудозатраты на задачу','Багов на задачу','Трудозатраты на исправление одного бага','Ставка часа'];
 const getTeam=()=>teams.find(t=>t.team===state.team);
 function barChart(container,list,key,{hero=false}={}){
  const compact=hero&&container.clientWidth<300;const w=Math.max(compact?180:280,Math.floor(container.clientWidth)),left=compact?47:74,right=compact?72:(key==='bug_cost'?92:85),plot=w-left-right,row=44,h=list.length*row+39;
@@ -31,7 +31,7 @@ function renderTeam(){
  const t=getTeam(),i=infos[t.team];$('team-name').textContent=t.team;$('team-tag').textContent=i.tag;$('team-observation').textContent=i.observation;$('team-action').textContent=i.action;$('team-expected').textContent='Ожидаемый результат: '+i.expected;$('team-deadline').textContent=i.deadline;$('team-owner').textContent='Ответственные: '+i.owner+'.';$('team-measure').textContent='Контроль результата: '+i.measure;
  $('team-buttons').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.team===state.team)));
  $('team-metrics').innerHTML=[[n(t.productivity,3),'задач на участника'],[n(t.density100,2),'багов на 100 задач'],[rub(t.cost_per_task),'стоимость задачи'],[rub(t.bug_cost),'стоимость исправлений']].map(([v,l])=>`<div class="team-metric"><div class="value num">${v}</div><div class="label">${l}</div></div>`).join('');
- $('team-source').innerHTML=[['Численность',t.n],['Выполнено задач',t.q],['Средние трудозатраты на задачу, ч',t.t],['Количество багов',t.b],['Средние трудозатраты на исправление бага, ч',t.f],['Ставка, ₽/ч',n(t.r,0)],['Переработки, число событий',t.w]].map(([l,v])=>`<tr><td>${l}</td><td class="num">${typeof v==='number'?n(v):v}</td></tr>`).join('');
+ $('team-source').innerHTML=[['Численность',t.n],['Выполнено задач',t.q],['Средние трудозатраты на задачу, ч',t.t],['Количество багов',t.b],['Средние трудозатраты на исправление одного бага, ч',t.f],['Ставка, ₽/ч',n(t.r,0)],['Переработки, число событий',t.w]].map(([l,v])=>`<tr><td>${l}</td><td class="num">${typeof v==='number'?n(v):v}</td></tr>`).join('');
  $('formula-cost').textContent=`Исправления: ${t.b} × ${n(t.f)} ч × ${n(t.r,0)} ₽/ч = ${rub(t.bug_cost)}`;
  $('formula-price').textContent=`На задачу: (${t.q} × ${n(t.t)} + ${t.b} × ${n(t.f)}) × ${n(t.r,0)} / ${t.q} = ${rub(t.cost_per_task)}`;
  $('alternative-cost').textContent='Если исправления уже включены в T: '+n(t.t)+' × '+n(t.r,0)+' = '+rub(t.included_cost_per_task)+' на задачу.';

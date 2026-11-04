@@ -9,9 +9,9 @@ const intro=document.getElementById('reader-intro');
 const download=document.getElementById('reader-download');
 const hint=document.getElementById('reader-footnote');
 const catalog={
- excel:{title:'Excel-отчёт',intro:'Все семь листов подготовленного файла с вычисленными значениями и формулами.',href:'files/01_calculations.xlsx?v=20261104-r4',name:'01_Расчёты_Дружинская.xlsx',button:'Скачать Excel',hint:'Для изменения данных и пересчёта формул скачайте XLSX. Интерактивные сценарии доступны в разделе «Сценарий».'},
- slides:{title:'Презентация',intro:'Семь слайдов презентации.',href:'files/02_presentation.pptx?v=20261104-r4',name:'02_Презентация_Дружинская.pptx',button:'Скачать PowerPoint',hint:'Для редактирования слайдов и заметок докладчика скачайте PPTX.'},
- guide:{title:'Инструкция по использованию',intro:'Полный текст Word-инструкции к итоговому комплекту.',href:'files/08_guide.docx?v=20261104-r4',name:'08_Инструкция_для_заказчика.docx',button:'Скачать Word',hint:'DOCX содержит эту же инструкцию и таблицы для использования вместе с файлами комплекта.'}
+ excel:{title:'Excel-отчёт',intro:'Все семь листов подготовленного файла с вычисленными значениями и формулами.',href:'files/01_calculations.xlsx?v=20261104-r5',name:'01_Расчёты_Дружинская.xlsx',button:'Скачать Excel',hint:'Для изменения данных и пересчёта формул скачайте XLSX. Интерактивные сценарии доступны в разделе «Сценарий».'},
+ slides:{title:'Презентация',intro:'Семь слайдов презентации.',href:'files/02_presentation.pptx?v=20261104-r5',name:'02_Презентация_Дружинская.pptx',button:'Скачать PowerPoint',hint:'Для редактирования слайдов и заметок докладчика скачайте PPTX.'},
+ guide:{title:'Инструкция по использованию',intro:'Полный текст Word-инструкции к итоговому комплекту.',href:'files/08_guide.docx?v=20261104-r5',name:'08_Инструкция_для_заказчика.docx',button:'Скачать Word',hint:'DOCX содержит эту же инструкцию и таблицы для использования вместе с файлами комплекта.'}
 };
 let mode='',lastFocus=null,slide=0,sheet=2,showFormulas=false;
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -43,7 +43,7 @@ function sheetTable(){
    if(showFormulas&&cell?.formula)cls+=' cell-formula';
    if(m)attrs+=` colspan="${m[3]-m[1]+1}" rowspan="${m[2]-m[0]+1}"`;
    const styles=cell?.style||{};
-   const css=[styles.fill?`background:${styles.fill}`:'',styles.color?`color:${styles.color}`:'',styles.bold?'font-weight:700':'',styles.size?`font-size:${styles.size}px`:''].filter(Boolean).join(';');
+   const css=[styles.fill?`background:${styles.fill}`:'',styles.color?`color:${styles.color}`:'',styles.bold?'font-weight:700':'',styles.italic?'font-style:italic':'',styles.size?`font-size:${styles.size}px`:'',styles.family?`font-family:${escapeHtml(styles.family)},Arial,sans-serif`:''].filter(Boolean).join(';');
    const value=escapeHtml(showFormulas&&cell?.formula?cell.formula:cell?.text||'');
    out+=`<td class="${cls}"${attrs} style="${css}" title="${address}">`+(cell?.formula?`<button class="cell-formula-button" data-cell="${address}" type="button" aria-label="Ячейка ${address}: ${escapeHtml(cell.text)}. Показать формулу">${value}</button>`:value)+'</td>';
   }
