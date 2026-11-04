@@ -1,12 +1,15 @@
 function renderFactors(){
- const values=DATA[state.method],container=$('factor-chart'),w=Math.max(720,Math.floor(container.clientWidth)),h=320,left=64,right=22,top=28,bottom=85,plotH=h-top-bottom,step=(w-left-right)/6,bw=Math.min(76,step*.65),max=30000;
- const labels=[['Alpha'],['Трудозатраты','на задачу'],['Багов','на задачу'],['Трудозатраты','на исправление','одного бага'],['Ставка','часа'],['Beta']];
- const base=teams[0].cost_per_task,end=teams[1].cost_per_task;let level=base;const bars=[{start:0,value:base}];values.forEach(v=>{bars.push({start:level,value:v});level+=v;});bars.push({start:0,value:end});
- let s=`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Разложение стоимости задачи Beta относительно Alpha"><title>Alpha ${n(base)} ₽, четыре вклада, Beta ${n(end)} ₽</title>`;
- [0,10000,20000,30000].forEach(v=>{const y=top+plotH*(1-v/max);s+=`<line x1="${left}" y1="${y}" x2="${w-right}" y2="${y}" stroke="#d6e0e3" stroke-width=".7"/><text x="${left-9}" y="${y+4}" text-anchor="end">${n(v,0)}</text>`;});
- bars.forEach((b,i)=>{const x=left+i*step+(step-bw)/2,y=top+plotH*(1-(b.start+b.value)/max),bh=b.value/max*plotH,isTotal=i===0||i===5;s+=`<rect x="${x}" y="${y}" width="${bw}" height="${bh}" fill="${isTotal?'#354C70':'#9AAAC0'}"><title>${labels[i].join(' ')}: ${n(b.value)} ₽</title></rect><text class="value" x="${x+bw/2}" y="${y-9}" text-anchor="middle">${isTotal?'':'+'}${n(b.value,0)}</text>`;labels[i].forEach((l,j)=>{s+=`<text x="${x+bw/2}" y="${h-bottom+24+j*17}" text-anchor="middle">${l}</text>`;});});
- container.innerHTML=s+'</svg>';
- let accumulated=base;$('waterfall-mobile').innerHTML=`<div class="flow-start"><span>Начало · Alpha</span><strong>${rub(base)}</strong></div>`+values.map((v,i)=>{accumulated+=v;return `<div class="flow-item"><div><strong>${factorLabels[i]}</strong><span>+${rub(v)}</span></div><small>Промежуточная стоимость: ${rub(accumulated)}</small></div>`;}).join('')+`<div class="flow-end"><span>Итог · Beta</span><strong>${rub(end)}</strong></div>`;
+ const values=DATA[state.method],base=teams[0].cost_per_task,end=teams[1].cost_per_task;
+ let accumulated=base;
+ $('factor-flow').innerHTML=`<div class="flow-start"><span>Начало · Alpha</span><strong>${rub(base)}</strong></div>`+values.map((v,i)=>{
+  accumulated+=v;
+  return `<button type="button" class="flow-item" data-flow-factor="${i}" aria-expanded="false" aria-controls="flow-detail-${i}"><span class="flow-main"><strong>${factorLabels[i]}</strong><span class="flow-value">+${rub(v)}</span></span><span class="flow-intermediate">Промежуточная стоимость: ${rub(accumulated)}</span><span class="flow-detail" id="flow-detail-${i}" hidden>${n(v/DATA.cost_gap*100,1)}% общей разницы стоимости по выбранному методу.</span></button>`;
+ }).join('')+`<div class="flow-end"><span>Итог · Beta</span><strong>${rub(end)}</strong></div>`;
+ $('factor-flow').querySelectorAll('[data-flow-factor]').forEach(button=>button.addEventListener('click',()=>{
+  const expanded=button.getAttribute('aria-expanded')!=='true';
+  button.setAttribute('aria-expanded',String(expanded));
+  $(button.getAttribute('aria-controls')).hidden=!expanded;
+ }));
  $('donut-feedback').textContent='Выберите фактор, чтобы увидеть его вклад.';
  const dc=$('donut-chart'),legend=$('donut-legend'),colors=['#304b72','#6780a2','#93a5bd','#c0cada'];let offset=0;
  if(values.some(v=>v<0)||DATA.cost_gap<=0){dc.innerHTML='<p>Этот вид недоступен для отрицательных вкладов. Выберите «От Alpha к Beta».</p>';legend.innerHTML='';}
